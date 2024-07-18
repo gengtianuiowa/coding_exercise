@@ -3,8 +3,9 @@ import Chance from 'chance';
 
 const chance = new Chance();
 const callbacks = [];
+
 function randomPercent() {
-  return Math.floor(Math.random() * 100);
+    return Math.floor(Math.random() * 100);
 }
 
 /**
@@ -14,7 +15,7 @@ function randomPercent() {
  * @params {function} callback - The function called with form data.
  */
 export function onMessage(callback) {
-  callbacks.push(callback);
+    callbacks.push(callback);
 }
 
 /**
@@ -25,74 +26,74 @@ export function onMessage(callback) {
  * percent of the time.
  */
 export async function fetchLikedFormSubmissions() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // We have a really flaky server that has issues
-      if (randomPercent() < 10) {
-        reject({ status: 500, message: 'server error' });
-        return;
-      }
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // We have a really flaky server that has issues
+            if (randomPercent() < 10) {
+                reject({status: 500, message: 'server error'});
+                return;
+            }
 
-      try {
-        resolve({
-          status: 200,
-          formSubmissions:
-            JSON.parse(localStorage.getItem('formSubmissions')) || [],
-        });
-      } catch (e) {
-        reject({ status: 500, message: e.message });
-      }
-    }, 3000 * (randomPercent() / 100));
-  });
+            try {
+                resolve({
+                    status: 200,
+                    formSubmissions:
+                        JSON.parse(localStorage.getItem('formSubmissions')) || [],
+                });
+            } catch (e) {
+                reject({status: 500, message: e.message});
+            }
+        }, 3000 * (randomPercent() / 100));
+    });
 }
 
 /**
  * Saves a liked form submission to the server.
  *
  * @params {FormSubmission} formSubmission
- * 
+ *
  * @return {Promise} resolves or rejects with a simple message.
  * We have a flaky server and requests will fail 10
  * percent of the time.
  */
 export async function saveLikedFormSubmission(formSubmission) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // We have a really flakey server that has issues
-      if (randomPercent() < 10) {
-        reject({ status: 500, message: 'server error' });
-        return;
-      }
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // We have a really flakey server that has issues
+            if (randomPercent() < 10) {
+                reject({status: 500, message: 'server error'});
+                return;
+            }
 
-      try {
-        const submissions = JSON.parse(localStorage.getItem('formSubmissions')) || [];
-        const updatedSubmissions = [...submissions, formSubmission];
+            try {
+                const submissions = JSON.parse(localStorage.getItem('formSubmissions')) || [];
+                const updatedSubmissions = [...submissions, formSubmission];
 
-        localStorage.setItem(
-          'formSubmissions',
-          JSON.stringify(updatedSubmissions),
-        );
-        resolve({ status: 202, message: 'Success!' });
-      } catch (e) {
-        reject({ status: 500, message: e.message });
-      }
-    }, 3000 * (randomPercent() / 100));
-  });
+                localStorage.setItem(
+                    'formSubmissions',
+                    JSON.stringify(updatedSubmissions),
+                );
+                resolve({status: 202, message: 'Success!'});
+            } catch (e) {
+                reject({status: 500, message: e.message});
+            }
+        }, 3000 * (randomPercent() / 100));
+    });
 }
 
 /**
  * Creates a mock server response
  */
 export function createMockFormSubmission() {
-  const formSubmission = {
-    id: chance.guid(),
-    data: {
-      email: chance.email(),
-      firstName: chance.first(),
-      lastName: chance.last(),
-      liked: false,
-    },
-  };
+    const formSubmission = {
+        id: chance.guid(),
+        data: {
+            email: chance.email(),
+            firstName: chance.first(),
+            lastName: chance.last(),
+            liked: false,
+        },
+    };
 
-  callbacks.forEach((cb) => cb(formSubmission));
+    callbacks.forEach((cb) => cb(formSubmission));
 }

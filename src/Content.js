@@ -33,11 +33,8 @@ export default function Content() {
                 setSnackbarOpen(true);
             }
         });
-        reloadSubmissions()
+        reloadSubmissions();
     }, []);
-    useEffect(() => {
-        console.log(likedSubmissions)
-    }, [likedSubmissions]);
     return (
         <Box sx={{marginTop: 3}}>
             <Typography variant="h4">Liked Form Submissions</Typography>
@@ -78,7 +75,7 @@ export default function Content() {
                                             if (status !== 202) {
                                                 message.error("Like submission failed! Please try again.");
                                                 console.log(res.message);
-                                                return
+                                                return;
                                             }
                                             await reloadSubmissions();
                                             message.success(`The user ${formSubmission.data.firstName} ${formSubmission.data.lastName} was liked successfully! You can find him/her at the bottom of the list.`);

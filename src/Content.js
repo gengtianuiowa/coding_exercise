@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import {Snackbar} from "@mui/material";
+import {CircularProgress, List, ListItem, ListItemText, Snackbar} from "@mui/material";
 import {fetchLikedFormSubmissions, onMessage, saveLikedFormSubmission} from "./service/mockServer";
-import Button from "@mui/material/Button";
 import {Button as AntdButton} from 'antd'
-import {Avatar, List, message} from "antd";
+import {message} from "antd";
 import {RedoOutlined} from "@ant-design/icons";
 
 export default function Content() {
@@ -47,20 +46,17 @@ export default function Content() {
             }} icon={<RedoOutlined/>}>Refresh</AntdButton>
             <Typography variant="body1" sx={{fontStyle: 'italic', marginTop: 1}}>
             </Typography>
-            <List
-                loading={loading}
-                itemLayout="horizontal"
-                dataSource={likedSubmissions}
-                renderItem={(item, index) => (
-                    <List.Item>
-                        <List.Item.Meta
-                            avatar={<Avatar src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}/>}
-                            title={<a href="https://ant.design">{item.title}</a>}
-                            description={`The user ${item.data.firstName} ${item.data.lastName}, email: ${item.data.email} submitted the form, and I liked it.`}
+            {loading && <CircularProgress/>}
+            <List>
+                {likedSubmissions.map((item, index) => (
+                    <ListItem key={index}>
+                        <ListItemText
+                            primary={`${item.data.firstName} ${item.data.lastName}`}
+                            secondary={`Email: ${item.data.email} submitted the form, and we liked it.`}
                         />
-                    </List.Item>
-                )}
-            />
+                    </ListItem>
+                ))}
+            </List>
             {formSubmission && <Snackbar
                 open={snackbarOpen}
                 message={`Name: ${formSubmission.data.firstName} ${formSubmission.data.lastName}, email :${formSubmission.data.email}`}

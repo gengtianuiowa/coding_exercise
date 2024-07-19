@@ -12,6 +12,7 @@ export default function Content() {
     const [likedSubmissions, setLikedSubmissions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [buttonLoading, setButtonLoading] = useState(false);
+    const [refreshLoading, setRefreshLoading] = useState(false);
     const [formSubmission, setFormSubmission] = useState(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const reloadSubmissions = () => {
@@ -40,7 +41,13 @@ export default function Content() {
     return (
         <Box sx={{marginTop: 3}}>
             <Typography variant="h4">Liked Form Submissions</Typography>
-            <AntdButton onClick={() => reloadSubmissions()} icon={<RedoOutlined/>}>Refresh</AntdButton>
+            <AntdButton loading={refreshLoading} onClick={async () => {
+                setRefreshLoading(true);
+                reloadSubmissions().then(res => {
+                    message.success("Refresh is done.");
+                    setRefreshLoading(false);
+                })
+            }} icon={<RedoOutlined/>}>Refresh</AntdButton>
             <Typography variant="body1" sx={{fontStyle: 'italic', marginTop: 1}}>
             </Typography>
             <List
